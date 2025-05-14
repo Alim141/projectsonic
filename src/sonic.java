@@ -8,6 +8,7 @@ class sonic {
         int lvl = 0;
         boolean isCompleted = false;
         while (true) {
+            //иницилизация переменных, которые обновляюьтся каждую попытку
             double x1 = 0.5;
             double y1 = 0.5;
             double width = 1;
@@ -27,6 +28,7 @@ class sonic {
             double x3 = 0;
             double stepX = 0.01;
             double stepY = 0.015;
+            //проверка пока не будет нажата кнопка рестарта/след уровня
             while (true) {
                 if (isCompleted) {
                     if ((lvl == 0) ||(isMousePressed() && mouseX() >= 0.7 && mouseX() <= 0.9 && mouseY() >= 0.07 && mouseY() <= 0.12)) {
@@ -40,6 +42,7 @@ class sonic {
                     }
                 }
             }
+            //сама игра
             while (life > 0) {
                 if (coin >= count) break;
                 picture(x1, y1, "src/lib/фон.jpg", width, height);
@@ -53,18 +56,21 @@ class sonic {
                 show();
                 pause(1000 / 60);
                 clear();
+                if (x2 > 1) x2 = 0;
+                if (x3 > 1) x3 = 0;
+                //проверка на касание с бомбой
                 if ((x3 + bombwWidth <= x + sonicWidth && x3 - bombwWidth >= x - sonicWidth) && (y3 + bombHeight >= y - sonicHeight && y3 - bombHeight >= y - sonicHeight)) {
                     StdAudio.playInBackground("src/lib/БомбаЗвук.wav");
                     life--;
                     x3 = 0;
                 }
+                //проверка на касание с монеткой
                 if ((x2 + bombwWidth <= x + sonicWidth && x2 - bombwWidth >= x - sonicWidth) && (y3 + bombHeight >= y - sonicHeight && y3 - bombHeight >= y - sonicHeight)) {
                     StdAudio.playInBackground("src/lib/Монетазвук.wav");
                     coin++;
                     x2 = 0;
                 }
-                if (x2 > 1) x2 = 0;
-                if (x3 > 1) x3 = 0;
+                //движение персонажа
                 if (isKeyPressed(KeyEvent.VK_D)) x = x + stepX;
                 if (isKeyPressed(KeyEvent.VK_A)) x = x - stepX;
                 if (isKeyPressed(KeyEvent.VK_SPACE) && y == 0.05) {
@@ -80,6 +86,7 @@ class sonic {
                 x3 = x3 + stepX * 2;
             }
             clear();
+            //конец уровня, проверка проигрыш или выйгрыш
             if (coin >= count) {
                 isCompleted = true;
                 StdAudio.playInBackground("src/lib/VICTORYSound.wav");
